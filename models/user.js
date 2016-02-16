@@ -49,8 +49,8 @@ userSchema.statics.login = function(userObject, callback) {
   // Save the toke in local storage 
   User.findOne({username:userObject.username}, function(err, dbUser) {
     if(err || dbUser) return callback(err || 'Username already taken');
-    var token = user.generateToken();
-    callback(token);
+    var token = User.generateToken();
+    callback(err, token);
     //res.cookie('mytoken', token).send();
   });
   /*
@@ -62,7 +62,7 @@ userSchema.statics.login = function(userObject, callback) {
 };
 
 // Instance method to generate token
-userSchema.methods.generateToken = function() {
+userSchema.statics.generateToken = function() {
   var payload = {
     _id: this._id
   };

@@ -1,8 +1,9 @@
-var app = angular.module('userAuthHash', []);
+var app = angular.module('userAuthHash', ['ngStorage']);
 
-app.controller("usersCtrl", function($scope, $http, AuthService) {
+app.controller("usersCtrl", function($scope, $localStorage, AuthService) {
+  $scope.$storage = $localStorage; 
+
   $scope.register = function() {
-    console.log('username in login is: ', $scope.registerInput);
     var regObject = $scope.registerInput;     
     AuthService.registerUser(regObject)
     .then(function(res){
@@ -11,22 +12,23 @@ app.controller("usersCtrl", function($scope, $http, AuthService) {
   };
 
   $scope.login = function() {
-    console.log('login function in ctrl');
-    console.log('username in login is: ', $scope.loginInput);
     AuthService.loginUser($scope.loginInput)
-    .then(function(res){
-      console.log('successful login, res is: ', res);
+    .then(function(res) {
+      console.log('successful login, res is: ', res.data);
+      // Save in local storage 
+      // Use factory to check each time you do a get or post 
+      if(!$localStorage.token) {
+        $localStorage.token = res.data;  
+      } 
     });
   };
 });
 
 app.service("AuthService", function($http) {
-
   this.registerUser = function(regObject) {
     console.log('register user function', regObject);
     return $http.post('/users/register', regObject);
   };
-
   this.loginUser = function(loginObject) {
     console.log('register user function', loginObject);
     return $http.post('/users/login', loginObject);
