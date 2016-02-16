@@ -1,10 +1,9 @@
 var app = angular.module('userAuthHash', ['ngStorage']);
 
-app.controller("usersCtrl", function($scope, $localStorage, AuthService) {
+app.controller("usersCtrl", function($scope, $localStorage, AuthService, User) {
   $scope.register = function() {
     var regObject = $scope.registerInput;  
     console.log('reg object is: ', regObject);
-    debugger;   
     AuthService.registerUser(regObject)
     .then(function(res){
       console.log('successful registration, res is: ', res);
@@ -12,31 +11,19 @@ app.controller("usersCtrl", function($scope, $localStorage, AuthService) {
   };
 
   $scope.login = function() {
-
     console.log('login input is: ', $scope.loginInput);
-    debugger;
     AuthService.loginUser($scope.loginInput)
     .then(function(res) {
       console.log('successful login, res is: ', res.data);
       // Save in local storage 
       // Use factory to check each time you do a get or post 
-      if(!$localStorage.token) {
-        $localStorage.token = res.data;  
-      } 
+      $localStorage.token = res.data.token;  
+      $scope.token = User.token;  
     });
   };
 });
 
-app.controller('navCtrl', function($scope, $localStorage) {
-  //$scope.isLoggedIn = AuthService.token; 
-  $scope.isLoggedIn = $localStorage.token; 
-})
-
-app.config(function($httpProvider) {
- $httpProvider.interceptors.push('httpRequestInterceptor');
-});
-
-app.service("AuthService", function($http, $localStorage) {
+app.service("AuthService", function($http) {
 
   this.registerUser = function(regObject) {
     console.log('register user function', regObject);
@@ -49,28 +36,34 @@ app.service("AuthService", function($http, $localStorage) {
   };
 
   this.logoutUser = function() {
-    $localStorage.token = '';
+    User.token = '';
   };
 });
 
+app.controller('navCtrl', function($scope, $localStorage) {
+  $scope.$watch(function() {
+    return $localStorage.token;
+  }, function(newVal) {
+    $scope.isLoggedIn = newVal;
+  })
+})
+
+app.service("User", function($localStorage) {
+  this.token = $localStorage.token;
+});
+
+app.config(function($httpProvider) {
+ $httpProvider.interceptors.push('httpRequestInterceptor');
+});
+
 //send headers with requests
-app.factory('httpRequestInterceptor', function($localStorage){
+app.factory('httpRequestInterceptor', function(User) {
  return {
    request: function(config){
-     if($localStorage.token){
-       config.headers = {'Authentication': 'Bearer ' + $localStorage.token}
+     if(User.token){
+       config.headers = {'Authentication': 'Bearer ' + User.token}
      }
      return config;
    }
  };
- 
- return {
-   request: function(config){
-     if(AuthService.token){
-       config.headers = {'Authentication': 'Bearer ' + AuthService.token}
-     }
-     return config;
-   }
- };
- 
 });
