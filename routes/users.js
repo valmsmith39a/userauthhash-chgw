@@ -8,6 +8,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/register', function(req, res, next) {
+  console.log('req.body in register is: ', req.body);
+
   var userObj = {};
   userObj.username = req.body.username; 
   userObj.password = req.body.password;
@@ -23,6 +25,9 @@ router.post('/login', function(req, res, next) {
   var userObj = {};
   userObj.username = req.body.username; 
   userObj.password = req.body.password;
+  
+  console.log('user obj is: ', userObj);
+  console.log('req.body in login is: ', userObj);
   
   User.login(userObj, function(err, data) {
     console.log('err in register is: ', err);

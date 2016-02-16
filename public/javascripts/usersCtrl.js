@@ -2,7 +2,9 @@ var app = angular.module('userAuthHash', ['ngStorage']);
 
 app.controller("usersCtrl", function($scope, $localStorage, AuthService) {
   $scope.register = function() {
-    var regObject = $scope.registerInput;     
+    var regObject = $scope.registerInput;  
+    console.log('reg object is: ', regObject);
+    debugger;   
     AuthService.registerUser(regObject)
     .then(function(res){
       console.log('successful registration, res is: ', res);
@@ -10,6 +12,9 @@ app.controller("usersCtrl", function($scope, $localStorage, AuthService) {
   };
 
   $scope.login = function() {
+
+    console.log('login input is: ', $scope.loginInput);
+    debugger;
     AuthService.loginUser($scope.loginInput)
     .then(function(res) {
       console.log('successful login, res is: ', res.data);
@@ -39,7 +44,7 @@ app.service("AuthService", function($http, $localStorage) {
   };
 
   this.loginUser = function(loginObject) {
-    console.log('register user function', loginObject);
+    console.log('login user function', loginObject);
     return $http.post('/users/login', loginObject);
   };
 

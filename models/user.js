@@ -47,11 +47,18 @@ userSchema.statics.login = function(userObject, callback) {
   // Authenticate 
   // Create the token 
   // Save the toke in local storage 
+
   User.findOne({username:userObject.username}, function(err, dbUser) {
-    if(err || dbUser) return callback(err || 'Username already taken');
-    var token = User.generateToken();
-    callback(err, token);
-    //res.cookie('mytoken', token).send();
+    //if(err || !dbUser) return callback(err || 'Username already taken');
+    // if find, then check hash
+
+    console.log('user object is: ', userObject.username);
+
+    bcrypt.compare(userObject.password, dbUser.password, function(err, res) {
+        console.log('res is: ', res);
+        var token = User.generateToken();
+        callback(err, token);
+    });
   });
   /*
   User.findOne({uid: authData.uid}, function(err, user) {
