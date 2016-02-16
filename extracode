@@ -1,37 +1,45 @@
-var app = angular.module('userAuthHash', ['ngStorage']);
+var app = angular.module('userAuthHash', []);
 
-app.controller("usersCtrl", function($scope, $localStorage, AuthService) {
+app.controller("usersCtrl", function($scope, AuthService) {
+  //$scope.$storage = $localStorage; 
+
   $scope.register = function() {
     var regObject = $scope.registerInput;     
+    /*
     AuthService.registerUser(regObject)
     .then(function(res){
       console.log('successful registration, res is: ', res);
     });
+    */
   };
 
   $scope.login = function() {
+    /*
     AuthService.loginUser($scope.loginInput)
     .then(function(res) {
       console.log('successful login, res is: ', res.data);
       // Save in local storage 
       // Use factory to check each time you do a get or post 
+    
       if(!$localStorage.token) {
         $localStorage.token = res.data;  
       } 
+    
     });
+    */
   };
+
 });
 
-app.controller('navCtrl', function($scope, $localStorage) {
-  //$scope.isLoggedIn = AuthService.token; 
-  $scope.isLoggedIn = $localStorage.token; 
-})
+app.service('AuthService', function($http, $scope) {
 
-app.config(function($httpProvider) {
- $httpProvider.interceptors.push('httpRequestInterceptor');
+
 });
 
-app.service("AuthService", function($http, $localStorage) {
+/*
+app.service("AuthSrvc", function($http, $scope) {
+
+  //this.token = $localStorage.token;
 
   this.registerUser = function(regObject) {
     console.log('register user function', regObject);
@@ -43,13 +51,19 @@ app.service("AuthService", function($http, $localStorage) {
     return $http.post('/users/login', loginObject);
   };
 
+  
   this.logoutUser = function() {
-    $localStorage.token = '';
+    this.token = '';
   };
+  
+
 });
+*/
+
+/*
 
 //send headers with requests
-app.factory('httpRequestInterceptor', function($localStorage){
+app.factory('httpRequestInterceptor', function(){
  return {
    request: function(config){
      if($localStorage.token){
@@ -69,3 +83,17 @@ app.factory('httpRequestInterceptor', function($localStorage){
  };
  
 });
+
+app.config(function($httpProvider){
+ $httpProvider.interceptors.push('httpRequestInterceptor');
+});
+
+app.controller('navCtrl', function($scope) {
+  //$scope.isLoggedIn = AuthService.token; 
+  $scope.isLoggedIn = $localStorage.token; 
+})
+*/
+
+
+
+
