@@ -1,0 +1,22 @@
+{
+  "name": "hw23_user_auth_hash",
+  "description": "",
+  "main": "",
+  "authors": [
+    "valmsmith39a <valmsmith39a@gmail.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "./public/bower_components"
+  ],
+  "dependencies": {
+    "angular": "~1.5.0"
+  }
+}
